@@ -1,5 +1,9 @@
-import os, texteditor, dec, find, gcwd_, runpy, colorama;
+import os, texteditor, dec, find, gcwd_, runpy, colorama, clrs;
 from py_console import console;
+
+# Startup
+
+os.system("");
 
 # Start functions
 
@@ -168,7 +172,7 @@ def cmd(command):
     # Convert base command help syntax.
 
     if(command[0:5] == "-base"):
-        print(colorama.Fore.LIGHTBLACK_EX + "Try using (* means required):\n*base -[from] -[*to] #[*value]" + colorama.Fore.RESET);
+        print(colorama.Fore.LIGHTBLACK_EX + "Try typing:\n*base -[from] -[*to] #[*value]" + colorama.Fore.RESET);
         return 0;
 
     # If no command was found (no value has been returned yet), print this error and return 1.
@@ -180,6 +184,7 @@ def cmd(command):
 
 def Main():
     while(1):
-        i = input(vars.directory+">> ");
+        i = input(clrs.rgbcolor(159, 60, 230, vars.directory) + clrs.rgbcolor(106, 224, 52, " ~ ") + clrs.rgbcolor(224, 146, 29,"",""));
+        print(colorama.Fore.CYAN, end="");
         cmd(i);
 Main();
