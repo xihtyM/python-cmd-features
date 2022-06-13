@@ -1,4 +1,5 @@
-import os, texteditor, dec, find, time, gcwd_, runpy;
+import os, texteditor, dec, find, gcwd_, runpy, colorama;
+from py_console import console;
 
 # Start functions
 
@@ -10,7 +11,7 @@ def updateDir():
         with open(getcwd()+"/vars/dir","r") as d:
             return d.read();
     except Exception as err:
-        print("Error:",err);
+        console.error("Error:",err);
 
 # Start variables
 
@@ -20,6 +21,36 @@ class vars:
 # Commands
 
 def cmd(command):
+
+    # Make folder command
+
+    if(command[0:5] == "mkdir"):
+        try:
+            directoryName = command[command.find(" "):].lstrip();
+            fullDir = vars.directory+"/"+directoryName;
+            if(os.path.exists(fullDir)): console.error("Error: Path already exists ('"+fullDir+"')"); return 1;
+            os.mkdir(fullDir);
+        except Exception as err:
+            console.error("Error:",err);
+            return 1;
+        if(os.path.exists(fullDir)): console.success("Sucessfully created directory:",fullDir); return 0;
+        console.error("Error: Something went wrong creating directory,",fullDir);
+        return 1;
+
+    # Delete folder command
+
+    if(command[0:5] == "rmdir"):
+        try:
+            directoryName = command[command.find(" "):].lstrip();
+            fullDir = vars.directory+"/"+directoryName;
+            if(not os.path.exists(fullDir)): console.error("Error: Path does not exist ('"+fullDir+"')"); return 1;
+            os.rmdir(fullDir);
+        except Exception as err:
+            console.error("Error:",err);
+            return 1;
+        if(not os.path.exists(fullDir)): console.success("Sucessfully deleted directory:",fullDir); return 0;
+        console.error("Error: Something went wrong deleting directory,",fullDir);
+        return 1;
 
     # Exit/close command
 
@@ -31,7 +62,7 @@ def cmd(command):
     if(command == "restart" or command == "reload"):
         print("Reloading...");
         runpy.run_path(getcwd()+"/main.py");
-        print("Sucessfully reloaded!");
+        console.success("Sucessfully reloaded!");
         return 0;
 
     # cls/clear command
@@ -41,7 +72,7 @@ def cmd(command):
         try:
             os.system("cls||clear");
         except Exception as err:
-            print("Error:",err);
+            console.error("Error:",err);
         return 0;
     
     # Text editor command
@@ -61,7 +92,7 @@ def cmd(command):
             # If you simply enter "cd" - or "cd            " etc, it will cause this error.
 
             if(len(path) < 1):
-                print("Error: Path does not exist ('"+path+"').");
+                console.error("Error: Path does not exist ('"+path+"').");
                 return 1;
             
             # Check if path exists and if it does, update the directory.
@@ -79,13 +110,13 @@ def cmd(command):
             
             # If it doesn't exist, print this error.
 
-            print("Error: Path does not exist ('"+path+"').");
+            console.error("Error: Path does not exist ('"+path+"').");
             return 1;
 
         # Error catching.
 
         except Exception as err:
-            print("Error:",err);
+            console.error("Error:",err);
             return 1;
 
     # Convert from base 2-36 command.
@@ -115,7 +146,7 @@ def cmd(command):
         # Error catching.
 
         except Exception as err:
-            print("Error:",err,"\nThis may be due to a syntax error, type '-base' for info.");
+            console.error("Error:",err,"\nThis may be due to a syntax error, type '-base' for info.");
             return 1;
 
         # Convert to the stated base digit.
@@ -127,7 +158,7 @@ def cmd(command):
         # Error catching.
 
         except Exception as err:
-            print("Error:",err,"\nThis may be due to a syntax error, type '-base' for info.");
+            console.error("Error:",err,"\nThis may be due to a syntax error, type '-base' for info.");
             return 1;
         
         # If no errors, return 0.
@@ -137,12 +168,12 @@ def cmd(command):
     # Convert base command help syntax.
 
     if(command[0:5] == "-base"):
-        print("Try using (* means required):\n*base -[from] -[*to] #[*value]");
+        print(colorama.Fore.LIGHTBLACK_EX + "Try using (* means required):\n*base -[from] -[*to] #[*value]" + colorama.Fore.RESET);
         return 0;
 
     # If no command was found (no value has been returned yet), print this error and return 1.
 
-    print("Command not found:",command);
+    console.error("Error: Command not found:",command);
     return 1;
 
 # Main
