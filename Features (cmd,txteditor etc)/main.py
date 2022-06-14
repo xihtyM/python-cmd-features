@@ -1,4 +1,4 @@
-import os, texteditor, dec, find, gcwd_, runpy, colorama, clrs;
+import os, texteditor, dec, find, gcwd_, runpy, colorama, clrs, pyplus, math;
 from py_console import console;
 
 # Startup
@@ -6,6 +6,27 @@ from py_console import console;
 os.system("");
 
 # Start functions
+
+def convertBytes(bytes):
+    if(bytes == 0): return "0 byte(s)\t\t";
+    bytes_name = ("byte(s)\t\t","kilobyte(s)\t","megabyte(s)\t","gigabyte(s)\t","terabyte(s)\t","petabyte(s)\t","exabyte(s)\t","zettabyte(s)\t","yottabyte(s)\t");
+    i = int(math.floor(math.log(bytes, 1000)));
+    p = math.pow(1000, i);
+    convertedBytes = round(bytes / p, 2);
+    if(len(str(convertedBytes)) < 4):
+        return "%s %s" % (convertedBytes, bytes_name[i]+"\t");
+    return "%s %s" % (convertedBytes, bytes_name[i]);
+
+def getDirSize(path):
+    if(os.path.isfile(path)): console.error("Error:",path,"is a file, not a directory."); return -1;
+    size = 0;
+    for x,v in enumerate(os.listdir(path)):
+        truePath = path+"/"+v;
+        if(os.path.isfile(truePath)):
+            size += os.path.getsize(truePath);
+            continue;
+        size += getDirSize(truePath);
+    return size;
 
 def getcwd():
     return gcwd_.getcwd();
@@ -17,14 +38,133 @@ def updateDir():
     except Exception as err:
         console.error("Error:",err);
 
+def updatePath():
+    try:
+        pathVars = {};
+        for i,v in enumerate(os.listdir(getcwd()+"/vars/path/")):
+            with open(getcwd()+"/vars/path/"+v) as path:
+                pathVars[v] = path.read();
+    except Exception as err:
+        console.error("Error:",err);
+    return pathVars;
+
 # Start variables
 
 class vars:
     directory = updateDir();
+    path = updatePath();
 
 # Commands
 
 def cmd(command):
+
+    # Run from path
+
+    if(command[0:7] == "runpath"):
+        try:
+            if(not os.path.exists(getcwd()+"/vars/path/"+command[8:].lstrip())): console.error("Error: Path variable does not exist."); return 1;
+            path = vars.path[command[8:].lstrip()];
+            if(not os.path.exists(path)): console.error("Error: Path variable is invalid (It doesn't exist)."); return 1;
+            os.startfile(path);
+            return 0;
+        except Exception as err:
+            console.error("Errodr:",err);
+            return 1;
+    # Path editor
+
+    if(command[0:4] == "path"):
+        try:
+            firstSpace = command.find(" ");
+            operator = command[firstSpace:firstSpace+3].lstrip().rstrip();
+            path_var = command[firstSpace+3:].lstrip().rstrip();
+            if(not os.path.exists(getcwd()+"/vars/path/"+path_var)): console.error("Error: Path does not exist ('"+path_var+"')"); return 1;
+            if(operator == "-e"):
+                file = input("Replace with (" + vars.directory + ") >> ");
+                fullFile = vars.directory+"/"+file;
+                if(not os.path.exists(fullFile)): console.error("Error: Path does not exist ('"+fullFile+"')"); return 1;
+                if(not os.path.isfile(fullFile)): console.error("Error: Path must be a file."); return 1;
+                with open(getcwd()+"/vars/path/"+path_var,"w") as writePath:
+                    writePath.write(fullFile);
+                vars.path = updatePath();
+                return 0;
+            if(operator == "-r"):
+                with open(getcwd()+"/vars/path/"+path_var,"r") as readPath:
+                    print(path_var+":",readPath.read());
+                return 0;
+        except Exception as err:
+            console.error("Error:",err);
+            return 1;
+
+    # Change parent directory
+
+    if(command == "rd"):
+        try:
+            if(vars.directory.count("/") == 0): console.error("Error: Cannot have a null path."); return 1;
+            vars.directory = vars.directory[0:find.find(vars.directory,"/",vars.directory.count("/")-1)-1];
+            with open(getcwd()+"/vars/dir","w") as d:
+                d.write(vars.directory);
+            vars.directory = updateDir();
+            return 0;
+        except Exception as err:
+            console.error("Error",err);
+            return 1;
+    
+    # Dir command
+
+    if(command[0:3] == "dir"):
+        try:
+            if(len(command) == 3):
+                print("\nDirectory",vars.directory+":\n");
+                dirs = files = 0;
+                for x,v in enumerate(os.listdir(vars.directory)):
+                    truePath = vars.directory+"/"+v;
+                    if(os.path.isfile(truePath)):
+                        print(convertBytes(os.path.getsize(truePath))+"\t<File>\t"+v);
+                        files += 1;
+                        continue;
+                    print(convertBytes(getDirSize(truePath))+"\t<Dir>\t"+v);
+                    dirs += 1;
+                print("\n\t"+convertBytes(getDirSize(vars.directory))+"\n\t"+str(files)+" file(s)\n\t"+str(dirs)+" dir(s)\n");
+                return 0;
+        except Exception as err:
+            console.error("Error:",err);
+            return 1;
+
+    # Python command
+
+    if(command[0:2] == "py"):
+        try:
+            firstSpace = command.find(" ")+1;
+            function = command[firstSpace:firstSpace+2].lstrip();
+            if(function == "-r"):
+                path = vars.directory+"/"+command[firstSpace+3:].lstrip();
+                if(not os.path.exists(path)): console.error("Error: Path does not exist ('"+path+"')"); return 1;
+                runpy.run_path(path);
+                return 0;
+            console.error("Error: See -py for syntax");
+            return 1;
+        except Exception as err:
+            console.error("Error:",err);
+            return 1;
+    
+    # Python+ compile/run
+
+    if(command[0:3] == "py+"):
+        try:
+            firstSpace = command.find(" ");
+            if(command[firstSpace+1:firstSpace+8].lstrip() == "compile"):
+                file = command[firstSpace+9:];
+                absdir = vars.directory+"/"+file;
+                if(os.path.exists(absdir)):
+                    f = open(absdir,"r").read();
+                    pyplus.compile(f);
+                    return 0;
+                else:
+                    console.error("Error: File not found ('"+absdir+"')");
+                    return 1;
+        except Exception as err:
+            console.error("Error:",err);
+            return 1;
 
     # Make folder command
 
@@ -66,7 +206,6 @@ def cmd(command):
     if(command == "restart" or command == "reload"):
         print("Reloading...");
         runpy.run_path(getcwd()+"/main.py");
-        console.success("Sucessfully reloaded!");
         return 0;
 
     # cls/clear command
@@ -92,13 +231,13 @@ def cmd(command):
             # Path variable
             
             path = command[2:].lstrip().replace(" ","\n").replace("\\","/").replace("/"," ").rstrip().replace(" ","/").replace("\n"," ").rstrip();
-            
+
             # If you simply enter "cd" - or "cd            " etc, it will cause this error.
 
             if(len(path) < 1):
                 console.error("Error: Path does not exist ('"+path+"').");
                 return 1;
-            
+
             # Check if path exists and if it does, update the directory.
 
             if(os.path.exists(path)):

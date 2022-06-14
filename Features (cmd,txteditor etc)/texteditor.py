@@ -27,7 +27,8 @@ def Write(name):
         if(os.path.exists(file)):
             with open(file,"r") as r:
                 text = decrypt.decrypt(r.read(),key);
-        print("\n"+text);
+        # Reset colors and print previously typed text  
+        print("\u001B[0m\n"+text);
         while(1):
             i = input();
             if(i == "/cmd"):
