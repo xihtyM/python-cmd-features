@@ -60,16 +60,17 @@ def cmd(command):
 
     # Run from path
 
-    if(command[0:7] == "runpath"):
+    if(command[0:4] == "runp"):
         try:
-            if(not os.path.exists(getcwd()+"/vars/path/"+command[8:].lstrip())): console.error("Error: Path variable does not exist."); return 1;
-            path = vars.path[command[8:].lstrip()];
+            if(not os.path.exists(getcwd()+"/vars/path/"+command[5:].lstrip())): console.error("Error: Path variable does not exist."); return 1;
+            path = vars.path[command[5:].lstrip()];
             if(not os.path.exists(path)): console.error("Error: Path variable is invalid (It doesn't exist)."); return 1;
             os.startfile(path);
             return 0;
         except Exception as err:
-            console.error("Errodr:",err);
+            console.error("Error:",err);
             return 1;
+    
     # Path editor
 
     if(command[0:4] == "path"):
@@ -170,7 +171,10 @@ def cmd(command):
 
     if(command[0:5] == "mkdir"):
         try:
-            directoryName = command[command.find(" "):].lstrip();
+            firstSpace = command.find(" ");
+            if(firstSpace == -1): console.error("Error: You must enter a path."); return 1;
+            directoryName = command[firstSpace:].lstrip();
+            if(directoryName == ""): console.error("Error: Path does not exist ('')"); return 1;
             fullDir = vars.directory+"/"+directoryName;
             if(os.path.exists(fullDir)): console.error("Error: Path already exists ('"+fullDir+"')"); return 1;
             os.mkdir(fullDir);
@@ -185,7 +189,10 @@ def cmd(command):
 
     if(command[0:5] == "rmdir"):
         try:
-            directoryName = command[command.find(" "):].lstrip();
+            firstSpace = command.find(" ");
+            if(firstSpace == -1): console.error("Error: You must enter a path."); return 1;
+            directoryName = command[firstSpace:].lstrip();
+            if(directoryName == ""): console.error("Error: Path does not exist ('')"); return 1;
             fullDir = vars.directory+"/"+directoryName;
             if(not os.path.exists(fullDir)): console.error("Error: Path does not exist ('"+fullDir+"')"); return 1;
             os.rmdir(fullDir);
