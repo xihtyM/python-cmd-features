@@ -1,2 +1,2 @@
-in this folder, to create a path, add a file without any extensions and name it to the paths name
-then edit it with the "path -e [path]" command
+to create a path, use path -c "pathname"
+>> enter file to run in directory
