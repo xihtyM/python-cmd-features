@@ -560,7 +560,7 @@ def cmd(command):
 def Main():
     while(1):
         i = input(clrs.rgbcolor(159, 60, 230, Vars.directory) + clrs.rgbcolor(106, 224, 52, " ~ ") + clrs.rgbcolor(224, 146, 29,"",""));
-        print(colorama.Fore.CYAN, end="");
+        print("\u001b[36;2m", end="");
         try:
             cmd(i);
         except Exception as err:
