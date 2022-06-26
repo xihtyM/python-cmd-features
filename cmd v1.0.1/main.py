@@ -362,14 +362,41 @@ def cmd(command):
                 p = command[firstSpace+3:].lstrip();
                 path = Vars.directory+"/"+p;
                 if(not os.path.exists(path)): console.error("Error: Path does not exist ('"+path+"')"); return 1;
-                tmpdir = getcwd()+"/temp/"+p;
-                tempfile = open(tmpdir,"w");
-                readfile = open(path,"r");
-                tempfile.write("import msvcrt as BAYUDWebdoyowdbadshAWEIDUWjdiaowpdwdadjwhedwhdqjdidm;\n"+readfile.read()+'\nprint("This process has finished, press any key to exit...");\nBAYUDWebdoyowdbadshAWEIDUWjdiaowpdwdadjwhedwhdqjdidm.getch();\n');
-                readfile.close();
-                tempfile.close();
-                subprocess.call(["py",tmpdir]);
-                os.remove(tmpdir);
+                #tmpdir = getcwd()+"/temp/"+p;
+                #tempfile = open(tmpdir,"w");
+                #readfile = open(path,"r");
+                #tempfile.write('try: import os; os.chdir("'+Vars.directory+'");\nexcept Exception: print("There was an error changing to the working directory, this may break file."); pass;\nimport msvcrt as BAYUDWebdoyowdbadshAWEIDUWjdiaowpdwdadjwhedwhdqjdidm;\n'+readfile.read()+'\nprint("This process has finished, press any key to exit...");\nBAYUDWebdoyowdbadshAWEIDUWjdiaowpdwdadjwhedwhdqjdidm.getch();');
+                #readfile.close();
+                #tempfile.close();
+                #subprocess.call(["py",tmpdir]);
+                #os.remove(tmpdir);
+                re = open(path,"r");
+                contents = re.read();
+                re.close();
+                clear = open(path,"w").close();
+                wr = open(path,"w");
+                wr.write(f'import msvcrt as BAYUDWebdoyowdbadshAWEIDUWjdiaowpdwdadjwhedwhdqjdidm;\n{contents}\nprint("This process has finished, press any key to exit...");\nBAYUDWebdoyowdbadshAWEIDUWjdiaowpdwdadjwhedwhdqjdidm.getch();');
+                wr.close();
+                try:
+                    subprocess.call(['py', path]);
+                    clear = open(path,"w").close();
+                    wrd = open(path,"w");
+                    wrd.write(contents);
+                    wrd.close();
+                except Exception as err:
+                    console.error(f"Error in {path}:",err);
+                    clear = open(path,"w").close();
+                    wrd = open(path,"w");
+                    wrd.write(contents);
+                    wrd.close();
+                    return 1;
+                return 0;
+            if(function == "-c"):
+                filename = command[firstSpace+3:].lstrip();
+                path = Vars.directory+"/"+filename;
+                if(not os.path.exists(path)): console.error("Error: File does not exist."); return 1;
+                code = open(path,"r").readlines();
+                pyplus.compile(code);
                 return 0;
             console.error("Error: See -py for syntax");
             return 1;
@@ -466,7 +493,20 @@ def cmd(command):
         try:
             # Path variable
             
-            path = command[2:].lstrip().replace(" ","\n").replace("\\","/").replace("/"," ").rstrip().replace(" ","/").replace("\n"," ").rstrip();
+            _path = command[2:].lstrip().replace(" ","\n").replace("\\","/").replace("/"," ").rstrip().lstrip().replace(" ","/").replace("\n"," ").rstrip();
+            path = "";
+
+            # Formatting path
+
+            prevSlash = False;
+            for i,v in enumerate(_path):
+                if(v == "/"):
+                    if(prevSlash == True): continue;
+                    path += v;
+                    prevSlash = True;
+                    continue;
+                path += v;
+                prevSlash = False;
 
             # If you simply enter "cd" - or "cd            " etc, it will cause this error.
 
