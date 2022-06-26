@@ -1,11 +1,91 @@
-import os, texteditor, dec, find, gcwd_, runpy, colorama, clrs, pyplus, math, subprocess;
-from py_console import console;
+# Python cmd main.py
+# Main file
+
+# COLORED TEXT FORMATTER:
+
+class clrs():
+    def rgbcolor(r,g,b,txt,end=None):
+        r,g,b = str(r),str(g),str(b);
+        if(end == ""): return f'\u001b[38;2;{r};{g};{b}m'+txt;
+        return f'\u001b[38;2;{r};{g};{b}m'+txt+"\u001B[0m";
+
+# ERROR CATCHING
+# IMPORT ALL MODULES/LIBS
+
+try:
+    import os, texteditor, dec, find, gcwd_, runpy, colorama, pyplus, math, subprocess, music
+    from py_console import console;
+    import mathfunctions as mathf;
+except ImportError as err:
+    import os, math;
+    os.system("");
+    print(clrs.rgbcolor(200,0,0,"",""),end='');
+    try:
+        from py_console import console;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import texteditor;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import dec;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import find;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import colorama;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import gcwd_;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import runpy;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import pyplus;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import subprocess;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import music;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
+    try:
+        import mathfunctions as mathf;
+    except Exception as e:
+        print('Error: There was an error importing certain files, this means that certain features will not work properly.\nErrorMessage:',e);
 
 # Startup
 
 os.system("");
 
 # Start functions
+
+def findRange(path,size_min,size_max,delete):
+    if(os.path.isfile(path)): console.error("Error:",path,"is a file, not a directory."); return -1;
+    for x,v in enumerate(os.listdir(path)):
+        truePath = path+"/"+v;
+        if(os.path.isfile(truePath)):
+            size = os.path.getsize(truePath);
+            if(size > size_min and size < size_max and delete == False):
+                print(str(size),"bytes:\t",truePath);
+                continue;
+            if(size > size_min and size < size_max and delete == True):
+                os.remove(truePath);
+                print("Removed file:\t",truePath);
+            continue;
+        findRange(truePath,size_min,size_max,delete)
+    return 0;
 
 def zeroBytes(path,_size,delete):
     if(os.path.isfile(path)): console.error("Error:",path,"is a file, not a directory."); return -1;
@@ -67,9 +147,9 @@ def updatePath():
 def openPyEdit(path_to_file):
     try:
         if(not os.path.exists(path_to_file)): console.error("Error: Path doesn't exist."); return 1;
-        if(not os.path.exists(vars.path["idle"])): console.error("Error: IDLE Path doesn't exist."); return 1;
+        if(not os.path.exists(Vars.path["idle"])): console.error("Error: IDLE Path doesn't exist."); return 1;
         if(not os.path.isfile(path_to_file)): console.error("Error: Path must be a file."); return 1;
-        subprocess.call([vars.path["idle"], path_to_file], shell=True);
+        subprocess.call("py",[Vars.path["idle"], path_to_file]);
         return 0;
     except Exception as err:
         console.error("Error:",err);
@@ -77,13 +157,62 @@ def openPyEdit(path_to_file):
 
 # Start variables
 
-class vars:
+class Vars:
     directory = updateDir();
     path = updatePath();
 
 # Commands
 
 def cmd(command):
+
+    # Math commands (Coming soon)
+
+    if(command[0:3] == "lcm"):
+        try:
+            firstSpace = command.find(" ")+1;
+            secondSpace = command.find(" ", firstSpace)+1;
+            if(firstSpace + secondSpace == -2): console.error("Error: Incorrect usage."); return 1;
+            if(secondSpace == -1): secondSpace = firstSpace;
+            firstDig = int(command[firstSpace:secondSpace].lstrip().rstrip());
+            secondDig = int(command[secondSpace:].lstrip().rstrip());
+            print("Lowest common multiple:", str(mathf.lcm(firstDig,secondDig)));
+            return 0;
+        except Exception as err:
+            console.error("Error:",err);
+            return 1;
+
+    # Play music command
+
+    if(command[0:4] == "play"):
+        try:
+            firstSpace = command.find(" ");
+            if(firstSpace == -1): console.error("Error: Incorrect usage."); return 1;
+            operator = command[firstSpace+1:firstSpace+3].lstrip();
+            if(operator == "-l"):
+                playlist = command[firstSpace+3:].lstrip();
+                if(os.path.exists(playlist)):
+                    if(os.path.isdir(playlist)):
+                        for i,v in enumerate(os.listdir(playlist)):
+                            print("Now playing:",v);
+                            music.play(playlist+"/"+v);
+                        return 0;
+                    console.error("Error: Path must be a directory.");
+                    return 1;
+                trueDir = Vars.directory+"/"+playlist;
+                if(os.path.exists(trueDir)):
+                    if(os.path.isdir(trueDir)):
+                        for i,v in enumerate(os.listdir(trueDir)):
+                            print("Now playing:",v);
+                            music.play(trueDir+"/"+v);
+                        return 0;
+                    console.error("Error: Path must be a directory.");
+                    return 1;
+                console.error("Error: Path does not exist.");
+                return 1;
+            return 0;
+        except Exception as err:
+            console.error("Error:",err);
+            return 1;
 
     # Find command
     
@@ -92,8 +221,8 @@ def cmd(command):
             fileSize = command.find("-s ");
             if(fileSize != -1):
                 fileSize = int(command[fileSize+3:].rstrip());
-                for x,v in enumerate(os.listdir(vars.directory)):
-                    truePath = vars.directory+"/"+v;
+                for x,v in enumerate(os.listdir(Vars.directory)):
+                    truePath = Vars.directory+"/"+v;
                     if(os.path.isfile(truePath)):
                         if(os.path.getsize(truePath) == fileSize):
                             print(str(fileSize),"bytes:\t",truePath);
@@ -109,13 +238,13 @@ def cmd(command):
                 else:
                     minSize = int(command[minSize+3:].rstrip());
                     maxSize = int(command[maxSize+3:command.find(" ",maxSize+3)].rstrip());
-                for x,v in enumerate(os.listdir(vars.directory)):
-                    truePath = vars.directory+"/"+v;
+                for x,v in enumerate(os.listdir(Vars.directory)):
+                    truePath = Vars.directory+"/"+v;
                     if(os.path.isfile(truePath)):
                         if(os.path.getsize(truePath) >= minSize and os.path.getsize(truePath) <= maxSize):
                             print(str(os.path.getsize(truePath)),"bytes:\t",truePath);
                         continue;
-                    #zeroBytes(truePath,fileSize,False);
+                    findRange(truePath,minSize,maxSize,False);
                 return 0;
             console.error("Error: Incorrect usage.");
             return 1;
@@ -139,16 +268,12 @@ def cmd(command):
             console.error("Error:",err);
             return 1;
 
-    # Find files command
-
-
-
     # Run from path
 
     if(command[0:4] == "runp"):
         try:
             if(not os.path.exists(getcwd()+"/vars/path/"+command[5:].lstrip())): console.error("Error: Path variable does not exist."); return 1;
-            path = vars.path[command[5:].lstrip()];
+            path = Vars.path[command[5:].lstrip()];
             if(not os.path.exists(path)): console.error("Error: Path variable is invalid (It doesn't exist).",path); return 1;
             os.startfile(path);
             return 0;
@@ -166,21 +291,21 @@ def cmd(command):
             path_var = command[firstSpace+3:].lstrip().rstrip();
             if(operator == "-c"):
                 with open(getcwd()+"/vars/path/"+path_var,"x") as createPath:
-                    file = input("Replace with (" + vars.directory + ") >> ");
-                    fullFile = vars.directory+"/"+file;
+                    file = input("Replace with (" + Vars.directory + ") >> ");
+                    fullFile = Vars.directory+"/"+file;
                     if(not os.path.exists(fullFile)): console.error("Error: Path does not exist ('"+fullFile+"')"); return 1;
                     if(not os.path.isfile(fullFile)): console.error("Error: Path must be a file."); return 1;
                     createPath.write(fullFile.replace("⠀","â €"));
                 return 0;
             if(not os.path.exists(getcwd()+"/vars/path/"+path_var)): console.error("Error: Path does not exist ('"+path_var+"')"); return 1;
             if(operator == "-e"):
-                file = input("Replace with (" + vars.directory + ") >> ");
-                fullFile = vars.directory+"/"+file;
+                file = input("Replace with (" + Vars.directory + ") >> ");
+                fullFile = Vars.directory+"/"+file;
                 if(not os.path.exists(fullFile)): console.error("Error: Path does not exist ('"+fullFile+"')"); return 1;
                 if(not os.path.isfile(fullFile)): console.error("Error: Path must be a file."); return 1;
                 with open(getcwd()+"/vars/path/"+path_var,"w") as writePath:
                     writePath.write(fullFile.replace("⠀","â €"));
-                vars.path = updatePath();
+                Vars.path = updatePath();
                 return 0;
             if(operator == "-r"):
                 with open(getcwd()+"/vars/path/"+path_var,"r") as readPath:
@@ -195,11 +320,11 @@ def cmd(command):
 
     if(command == "rd"):
         try:
-            if(vars.directory.count("/") == 0): console.error("Error: Cannot have a null path."); return 1;
-            vars.directory = vars.directory[0:find.find(vars.directory,"/",vars.directory.count("/")-1)-1];
+            if(Vars.directory.count("/") == 0): console.error("Error: Cannot have a null path."); return 1;
+            Vars.directory = Vars.directory[0:find.find(Vars.directory,"/",Vars.directory.count("/")-1)-1];
             with open(getcwd()+"/vars/dir","w") as d:
-                d.write(vars.directory.replace("⠀","â €"));
-            vars.directory = updateDir();
+                d.write(Vars.directory.replace("⠀","â €"));
+            Vars.directory = updateDir();
             return 0;
         except Exception as err:
             console.error("Error",err);
@@ -210,32 +335,41 @@ def cmd(command):
     if(command[0:3] == "dir"):
         try:
             if(len(command) == 3):
-                print("\nDirectory",vars.directory+":\n");
+                print("\nDirectory",Vars.directory+":\n");
                 dirs = files = 0;
-                for x,v in enumerate(os.listdir(vars.directory)):
-                    truePath = vars.directory+"/"+v;
+                for x,v in enumerate(os.listdir(Vars.directory)):
+                    truePath = Vars.directory+"/"+v;
                     if(os.path.isfile(truePath)):
                         print(convertBytes(os.path.getsize(truePath))+"\t<File>\t"+v);
                         files += 1;
                         continue;
                     print(convertBytes(getDirSize(truePath))+"\t<Dir>\t"+v);
                     dirs += 1;
-                print("\n\t"+convertBytes(getDirSize(vars.directory))+"\n\t"+str(files)+" file(s)\n\t"+str(dirs)+" dir(s)\n");
+                print("\n\t"+convertBytes(getDirSize(Vars.directory))+"\n\t"+str(files)+" file(s)\n\t"+str(dirs)+" dir(s)\n");
                 return 0;
         except Exception as err:
             console.error("Error:",err);
             return 1;
 
     # Python command
+    # Currently supports running python files
 
     if(command[0:2] == "py"):
         try:
             firstSpace = command.find(" ")+1;
             function = command[firstSpace:firstSpace+2].lstrip();
             if(function == "-r"):
-                path = vars.directory+"/"+command[firstSpace+3:].lstrip();
+                p = command[firstSpace+3:].lstrip();
+                path = Vars.directory+"/"+p;
                 if(not os.path.exists(path)): console.error("Error: Path does not exist ('"+path+"')"); return 1;
-                runpy.run_path(path);
+                tmpdir = getcwd()+"/temp/"+p;
+                tempfile = open(tmpdir,"w");
+                readfile = open(path,"r");
+                tempfile.write("import msvcrt as BAYUDWebdoyowdbadshAWEIDUWjdiaowpdwdadjwhedwhdqjdidm;\n"+readfile.read()+'\nprint("This process has finished, press any key to exit...");\nBAYUDWebdoyowdbadshAWEIDUWjdiaowpdwdadjwhedwhdqjdidm.getch();\n');
+                readfile.close();
+                tempfile.close();
+                subprocess.call(["py",tmpdir]);
+                os.remove(tmpdir);
                 return 0;
             console.error("Error: See -py for syntax");
             return 1;
@@ -245,22 +379,22 @@ def cmd(command):
     
     # Python+ compile/run
 
-    if(command[0:3] == "py+"):
-        try:
-            firstSpace = command.find(" ");
-            if(command[firstSpace+1:firstSpace+8].lstrip() == "compile"):
-                file = command[firstSpace+9:];
-                absdir = vars.directory+"/"+file;
-                if(os.path.exists(absdir)):
-                    f = open(absdir,"r").read();
-                    pyplus.compile(f);
-                    return 0;
-                else:
-                    console.error("Error: File not found ('"+absdir+"')");
-                    return 1;
-        except Exception as err:
-            console.error("Error:",err);
-            return 1;
+    #if(command[0:3] == "py+"):
+    #    try:
+    #        firstSpace = command.find(" ");
+    #        if(command[firstSpace+1:firstSpace+8].lstrip() == "compile"):
+    #            file = command[firstSpace+9:];
+    #            absdir = Vars.directory+"/"+file;
+    #            if(os.path.exists(absdir)):
+    #                f = open(absdir,"r").read();
+    #                pyplus.compile(f);
+    #                return 0;
+    #            else:
+    #                console.error("Error: File not found ('"+absdir+"')");
+    #                return 1;
+    #    except Exception as err:
+    #        console.error("Error:",err);
+    #        return 1;
 
     # Make folder command
 
@@ -270,7 +404,7 @@ def cmd(command):
             if(firstSpace == -1): console.error("Error: You must enter a path."); return 1;
             directoryName = command[firstSpace:].lstrip();
             if(directoryName == ""): console.error("Error: Path does not exist ('')"); return 1;
-            fullDir = vars.directory+"/"+directoryName;
+            fullDir = Vars.directory+"/"+directoryName;
             if(os.path.exists(fullDir)): console.error("Error: Path already exists ('"+fullDir+"')"); return 1;
             os.mkdir(fullDir);
         except Exception as err:
@@ -288,7 +422,7 @@ def cmd(command):
             if(firstSpace == -1): console.error("Error: You must enter a path."); return 1;
             directoryName = command[firstSpace:].lstrip();
             if(directoryName == ""): console.error("Error: Path does not exist ('')"); return 1;
-            fullDir = vars.directory+"/"+directoryName;
+            fullDir = Vars.directory+"/"+directoryName;
             if(not os.path.exists(fullDir)): console.error("Error: Path does not exist ('"+fullDir+"')"); return 1;
             os.rmdir(fullDir);
         except Exception as err:
@@ -345,12 +479,12 @@ def cmd(command):
             if(os.path.exists(path)):
                 with open(getcwd()+"/vars/dir","w") as d:
                     d.write(path.replace("⠀","â €"));
-                vars.directory = updateDir();
+                Vars.directory = updateDir();
                 return 0;
-            if(os.path.exists(vars.directory+"/"+path)):
+            if(os.path.exists(Vars.directory+"/"+path)):
                 with open(getcwd()+"/vars/dir","w") as d:
-                    d.write(vars.directory.replace("⠀","â €")+"/"+path.replace("⠀","â €"));
-                vars.directory = updateDir();
+                    d.write(Vars.directory.replace("⠀","â €")+"/"+path.replace("⠀","â €"));
+                Vars.directory = updateDir();
                 return 0;
             
             # If it doesn't exist, print this error.
@@ -425,7 +559,10 @@ def cmd(command):
 
 def Main():
     while(1):
-        i = input(clrs.rgbcolor(159, 60, 230, vars.directory) + clrs.rgbcolor(106, 224, 52, " ~ ") + clrs.rgbcolor(224, 146, 29,"",""));
+        i = input(clrs.rgbcolor(159, 60, 230, Vars.directory) + clrs.rgbcolor(106, 224, 52, " ~ ") + clrs.rgbcolor(224, 146, 29,"",""));
         print(colorama.Fore.CYAN, end="");
-        cmd(i);
+        try:
+            cmd(i);
+        except Exception as err:
+            print("Error:",err);
 Main();
