@@ -13,4 +13,5 @@ __With zipped file__
 3. **Optional**: Create a shortcut to main.py.
 
 >This project is mainly for fun, so don't expect it to be anything groundbreaking.
+
 >If you see something wrong, or get an unexpected error. Please create an issue via github; or if you feel like fixing it yourself, you can contribute.
