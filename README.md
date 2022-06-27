@@ -18,7 +18,7 @@ __With installer__
 
 __With zipped file__
 
-1. Download the zipped file at  (Latest release).
+1. Download the zipped file at https://github.com/xihtyM/python-cmd-features/tree/master/Zipped%20files (Latest release is at the top of this file).
 2. Unzip with extract here in the directory you would like.
 3. **Optional**: Create a shortcut to main.py.
 
