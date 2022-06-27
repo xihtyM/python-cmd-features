@@ -7,6 +7,7 @@
 
 ## Next release (v.1.0.3) ##
 1. Control volume of playsound and add something that can pause/stop music from playing (Probably will come out in 1.0.3)
+2. Add shortcuts to installer
 
 ## Download ##
 
