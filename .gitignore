@@ -5,5 +5,5 @@ __pycache__
 
 # Temporary
 
-installer.c
+installer.cpp
 installer.exe

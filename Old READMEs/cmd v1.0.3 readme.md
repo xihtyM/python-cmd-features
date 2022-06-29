@@ -1,10 +1,9 @@
-# cmd v1.0.4 pre-release-1
+# cmd v1.0.3
 
 ## Patch Notes ##
-1. Fixed rmdir bug where you could remove the current directory you were in.
-2. Added ability to remove not empty directory.
-3. Added ignoring inaccessable files/directories with the dir command.
-
+1. Added java installer.
+2. Added fixer (Install required libraries).
+3. Improved README a lot.
 
 ## Next Release (v.1.0.4) ##
 1. Control volume of playsound and add something that can pause/stop music from playing.
