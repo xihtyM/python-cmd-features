@@ -9,7 +9,6 @@ import java.nio.file.Paths
 import java.io.File
 import java.net.URL
 import java.nio.file.Files
-import java.util.zip.ZipFile
 
 // RGB
 
@@ -37,25 +36,17 @@ fun downloadFile(url: URL, fileName: String) {
 	}
 }
 
-fun unzipFile(file: String) {
+fun unzipFile(file: String, dir: String) {
 	println("Unzipping file...")
-	// 100% my code ;D *sarcasm*
-	ZipFile(file).use { zip ->
-		zip.entries().asSequence().forEach { entry ->
-			zip.getInputStream(entry).use { input ->
-				File(entry.name).outputStream().use { output ->
-					input.copyTo(output)
-				}
-			}
-		}
-	}
-	println(rgbcolor(0, 200, 0, "Sucessfully installed cmd!"))
+	Runtime.getRuntime().exec("powershell -Command Expand-Archive -Path $file -DestinationPath $dir")
+	println(rgbcolor(0,200,0,"Sucessfully unzipped file."))
 }
 
 fun install(path: String) {
 	var file = "$path\\cmd.zip"
-	downloadFile(URL("https://github.com/xihtyM/python-cmd-features/blob/master/Zipped%20files/Latest%20Release/cmd.zip?raw=true"), file)
-	unzipFile(file)
+	downloadFile(URL("https://github.com/xihtyM/python-cmd-features/raw/master/Zipped%20files/Latest%20Release/cmd.zip"), file)
+	unzipFile(file, path)
+	File(file).deleteOnExit()
 }
 
 fun run() {
