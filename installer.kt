@@ -38,7 +38,16 @@ fun downloadFile(url: URL, fileName: String) {
 
 fun unzipFile(file: String, dir: String) {
 	println("Unzipping file...")
-	Runtime.getRuntime().exec("powershell -Command Expand-Archive -Path $file -DestinationPath $dir")
+	var currOS = System.getProperty("os.name").lowercase()
+	if(currOS.contains("win")) {
+		Runtime.getRuntime().exec("powershell -Command Expand-Archive -Path $file -DestinationPath $dir")
+	} else if(currOS.contains("nix") || currOS.contains("nux") || currOS.contains("aix")) {
+		Runtime.getRuntime().exec("unzip $file -d $dir")
+	} else if(currOS.contains("mac")) {
+		Runtime.getRuntime().exec("unzip $file - d $dir")
+	} else {
+		println(rgbcolor(200,0,0,"Unfortunately, your os is not supported. You will have to unzip the file manually."))
+	}
 	println(rgbcolor(0,200,0,"Sucessfully unzipped file."))
 }
 
