@@ -1,4 +1,11 @@
-*.exe
+.vscode
 __pycache__
 *.hide
 .git
+
+# Temporary
+
+installer.c
+installer.exe
+installer.jar
+installer.kt

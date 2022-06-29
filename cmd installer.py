@@ -68,10 +68,13 @@ except ImportError:
 		subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'gitpython']);
 	except Exception as err:
 		print("Error:",err);
+		time.sleep(2);
 		quit();
 	try:
 		from git import Repo as rep;
 	except ImportError:
+		print("Error:",err);
+		time.sleep(2);
 		quit();
 
 def install(path,url):
@@ -83,6 +86,9 @@ def install(path,url):
 		rep.clone_from(url,path);
 		os.remove(os.path.join(path,".gitignore"));
 		os.remove(os.path.join(path,"cmd installer.py"));
+		os.remove(os.path.join(path,"installer.jar"))
+		os.remove(os.path.join(path,"installer.kt"))
+		os.remove(os.path.join(path,"fixer.c"))
 		shutil.rmtree(os.path.join(path,".git"), ignore_errors = True);
 		shutil.rmtree(os.path.join(path,"Zipped files"), ignore_errors = True);
 		shutil.rmtree(os.path.join(path,"Old READMEs"), ignore_errors = True);
