@@ -1,23 +1,26 @@
-# cmd v1.0.4 pre-release-2
+# cmd v1.0.4 pre-release-1
 
 ## Patch Notes ##
-1. ADDED EXECUTABLE INSTALLER
+1. Fixed rmdir bug where you could remove the current directory you were in.
+2. Added ability to remove not empty directory.
+3. Added ignoring inaccessable files/directories with the dir command.
+
 
 ## Next Release (v.1.0.4) ##
 1. Control volume of playsound and add something that can pause/stop music from playing.
 2. Add shortcuts to installer (Most likely v1.0.5).
 
 ## Future Notes ##
-1. Adding support for linux and mac on c installer.
+1. Adding an executable installer.
 
 ## Download ##
 
 __With installer__
 
 1. Install the installer by going to this link:
-- C Installer (Windows only as of now): https://github.com/xihtyM/python-cmd-features/raw/master/installer.exe.
+- Python Installer: https://raw.githubusercontent.com/xihtyM/python-cmd-features/master/cmd%20installer.py - Copy this into a .py file.
 - Java Installer: https://github.com/xihtyM/python-cmd-features/raw/master/installer.jar.
-> Python Installer: https://raw.githubusercontent.com/xihtyM/python-cmd-features/master/cmd%20installer.py - Copy this into a .py file.
+- Installer (Coming soon)
 2. Install fixer and run it at (If you use the java installer): https://github.com/xihtyM/python-cmd-features/raw/master/fixer.exe.
 3. Run the installer.
 4. Input your chosen directory.

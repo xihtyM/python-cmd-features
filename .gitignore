@@ -2,8 +2,3 @@
 __pycache__
 *.hide
 .git
-
-# Temporary
-
-installer.c
-installer.exe
