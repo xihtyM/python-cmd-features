@@ -32,6 +32,10 @@ __With zipped file__
 2. Unzip with extract here in the directory you would like.
 3. **Optional**: Create a shortcut to main.py.
 
+__Installing old versions__
+
+- Just go to https://github.com/xihtyM/python-cmd-features/tree/master/Zipped%20files/ and unzip the version you want.
+
 ## Fixer ##
 
 __Precautions__
