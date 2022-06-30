@@ -192,6 +192,8 @@ char * replace(char * string, char chr1, char chr2) {
         strcat(cmd, __dir);
 
         system(cmd);
+        
+        remove(dest);
 
         printf("\nSucessfully installed!");
 
