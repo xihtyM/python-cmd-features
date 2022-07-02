@@ -365,7 +365,7 @@ char * replace(char * string, char chr1, char chr2) {
 
 int main() {
     isValid();
-    //UpdatePyPackages();
+    UpdatePyPackages();
 
     /* Temporary stopping linux/mac users from using this */
 
