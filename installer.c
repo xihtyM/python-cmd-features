@@ -25,34 +25,47 @@
     #undef __MACOS__f
 #endif
 
+/* Define true and false */
+
+#ifdef True
+    #undef True
+#endif
+
+#ifdef False
+    #undef False
+#endif
+
+#define True 1
+#define False 0
+
 /* Is on Windows System */
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-    #define __WIN__f 1
+    #define __WIN__f True
 #else
-    #define __WIN__f 0
+    #define __WIN__f False
 #endif
 
 /* Is on MacOS */
 
 #ifdef __APPLE__
-    #define __MACOS__f 1
+    #define __MACOS__f True
 #else
-    #define __MACOS__f 0
+    #define __MACOS__f False
 #endif
 
 /* Is on Linux System */
 
 #ifdef linux
-    #define __LINUX__f 1
+    #define __LINUX__f True
 #else
-    #define __LINUX__f 0
+    #define __LINUX__f False
 #endif
 
 /* Check if system is valid */
 
 void isValid() {
-    if(system(NULL) == 0) {
+    if(system(NULL) == False) {
         printf("Error: System is not supported.");
         system("pause");
         exit(0);
@@ -112,7 +125,7 @@ char * replace(char * string, char chr1, char chr2) {
     // We have to define _CRT_INTERNAL_NONSTDC_NAMES 1 before #including sys/stat.h
     // in order for Microsoft's stat.h to define names like S_IFMT, S_IFREG, and S_IFDIR,
     // rather than just defining  _S_IFMT, _S_IFREG, and _S_IFDIR as it normally does.
-    #define _CRT_INTERNAL_NONSTDC_NAMES 1
+    #define _CRT_INTERNAL_NONSTDC_NAMES True
 
     #include <sys/stat.h>
 
@@ -124,9 +137,11 @@ char * replace(char * string, char chr1, char chr2) {
         #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
     #endif
 
-    int isDirectory(char* dir) {
+    /* If directory command */
+
+    int isDirectory(char * dir) {
         
-        const char* folder = replace(dir,'/','\\');
+        const char * folder = replace(dir,'/','\\');
 
         /* Create stat struct */
 
@@ -134,10 +149,31 @@ char * replace(char * string, char chr1, char chr2) {
 
         /* If it is a folder */
 
-        if(stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+        if(stat(folder, &sb) == False && S_ISDIR(sb.st_mode)) {
             return 1;
         }
         /* If it is not a folder */
+        else {
+            return 0;
+        }
+    }
+
+    /* If file command */
+
+    int isFile(char * raw_file) {
+        
+        const char * file = replace(raw_file,'/','\\');
+
+        /* Create stat struct */
+
+        struct stat sb;
+
+        /* If it is a file */
+
+        if(stat(file, &sb) == False && S_ISREG(sb.st_mode)) {
+            return 1;
+        }
+        /* If it is not a file */
         else {
             return 0;
         }
@@ -157,7 +193,7 @@ char * replace(char * string, char chr1, char chr2) {
 
         /* Directory to zip file */
 
-        char tempDest[512];
+        char tempDest[MAX_PATH];
         strcpy(tempDest, __dir);
         strcat(tempDest, "\\cmd.zip");
         const char * dest = tempDest;
@@ -185,7 +221,7 @@ char * replace(char * string, char chr1, char chr2) {
         char * cmd_1 = "powershell -Command Expand-Archive -Path ";
         char * cmd_2 = " -DestinationPath ";
 
-        char cmd[512];
+        char cmd[MAX_PATH];
         strcpy(cmd, cmd_1);
         strcat(cmd, dest);
         strcat(cmd, cmd_2);
@@ -199,9 +235,127 @@ char * replace(char * string, char chr1, char chr2) {
 
     }
 
+    /* Might add a command in cmd */
+
+    void addcmd(const char * p) {
+        
+        /* System32 path */
+
+        char win32_sys[MAX_PATH];
+        GetSystemDirectoryA(win32_sys,sizeof(win32_sys));
+
+        /* Batch file path */
+
+        char path_to_bat[MAX_PATH];
+
+        strcpy(path_to_bat,win32_sys);
+        strcat(path_to_bat,"\\pycmd.bat");
+
+        if(isFile(path_to_bat) == False) {
+
+            /* Pointer to bat file */
+
+            FILE * batptr;
+
+            batptr = fopen(path_to_bat,"w");
+
+            /* Gotta be safe */
+
+            //if(batptr != NULL) {
+                    
+            char * cmd = "@echo off\npy ";
+            printf("True");
+            char * quote = "\"";
+
+            strcat(cmd,quote);
+            strcat(cmd,p);
+            strcat(cmd,quote);
+
+            fprintf(batptr,"@echo off\npy \"C:\\Users\\tiddl\\Desktop\\⠀\\Programs\\Python Projects\\Text Editor (NEW - Terminal)\\cmd v1.0.4 pre-release-1\\main.py\"");
+
+            //} else {
+            //    printf("\nError: Something went wrong creating windows command.");
+            //    return;
+            //}
+
+            fclose(batptr);
+
+        } else {
+            printf("\nError: Something went wrong creating windows command.");
+            return;
+        }
+        if(isFile(path_to_bat) == False) {
+            printf("\nError: Something went wrong creating windows command.");
+        }
+    }
+
+    /* Desktop shortcut */
+
+    void addShrt(const char * p) {
+
+        /* USERPROFILE environment variable */
+
+        const char * USERPROFILE = getenv("USERPROFILE");
+
+        /* Desktop path */
+
+        char T_DESKTOP[MAX_PATH];
+
+        strcpy(T_DESKTOP,USERPROFILE);
+        strcat(T_DESKTOP,"\\Desktop");
+
+        const char * DESKTOP = T_DESKTOP;
+
+        /* Shortcut link */
+
+        char T_SHORT_LNK[MAX_PATH];
+
+        strcpy(T_SHORT_LNK,DESKTOP);
+        strcat(T_SHORT_LNK,"\\pycmd");
+
+        const char * SHORT_LNK = T_SHORT_LNK;
+
+        /* System command */
+
+        char command[1024] = "mklink \"";
+
+        strcat(command,SHORT_LNK);
+        strcat(command,"\" \"");
+        strcat(command,p);
+        strcat(command,"\\cmd\\main.py");
+        strcat(command,"\"");
+
+        system(command);
+        
+    }
+
 /* Linux Code */
 
 #elif __LINUX__f
+    /* Havent tested to see if it works */
+    /* Linux specific libs */
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #include <unistd.h>
+
+    int isDirectory(char* dir) {
+        
+        const char* folder = replace(dir,'/','\\');
+
+        /* Create stat struct */
+
+        struct stat sb;
+
+        /* If it is a folder */
+
+        if(stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+            return 1;
+        }
+        /* If it is not a folder */
+        else {
+            return 0;
+        }
+    }
 
 /* MacOS Code */
 
@@ -209,20 +363,29 @@ char * replace(char * string, char chr1, char chr2) {
 
 #endif
 
-
 int main() {
     isValid();
-    UpdatePyPackages();
-    char path[512];
+    //UpdatePyPackages();
+
+    /* Temporary stopping linux/mac users from using this */
+
+    #if __LINUX__f || __MACOS__f
+        printf("Error, your current OS is not supported, please use the java installer.");
+        return 0;
+    #endif
+
+    /* Create pycmd shell command in windows */
+
+    char path[MAX_PATH];
 
     /* While path is not a directory */
 
-    while(isDirectory(path) == 0) {
+    while(isDirectory(path) == False) {
         printf("\nInstallation directory: ");
 
         /* User input */
 
-        fgets(path, 512, stdin);
+        fgets(path, MAX_PATH, stdin);
 
         /* Gotta be safe */
 
@@ -235,6 +398,8 @@ int main() {
     printf("\nInstalling at: %s",path);
 
     install(path);
+    //addcmd(path);
+    addShrt(path);
 
 	return 0;
 }
