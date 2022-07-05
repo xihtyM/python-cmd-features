@@ -176,6 +176,9 @@ def openPyEdit(path_to_file):
         console.error("Error:",err);
         return 1;
 
+def extension(__p):
+    return __p[len(__p)-3:len(__p)];
+
 # Start variables
 
 class Vars:
@@ -214,6 +217,7 @@ def cmd(command):
                 if(os.path.exists(playlist)):
                     if(os.path.isdir(playlist)):
                         for i,v in enumerate(os.listdir(playlist)):
+                            if(extension(v) != "mp3"): continue;
                             print("Now playing:",v);
                             music.play(playlist+"/"+v);
                         return 0;
@@ -223,6 +227,7 @@ def cmd(command):
                 if(os.path.exists(trueDir)):
                     if(os.path.isdir(trueDir)):
                         for i,v in enumerate(os.listdir(trueDir)):
+                            if(extension(v) != "mp3"): continue;
                             print("Now playing:",v);
                             music.play(trueDir+"/"+v);
                         return 0;

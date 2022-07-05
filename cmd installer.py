@@ -1,4 +1,4 @@
-VERSION_NAME = "v1.0.2";
+VERSION_NAME = "v1.0.4";
 
 try:
 	import subprocess, sys, os, time;

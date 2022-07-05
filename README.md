@@ -15,10 +15,10 @@
 __With installer__
 
 1. Install the installer by going to this link:
-- Java Installer: https://github.com/xihtyM/python-cmd-features/raw/master/installer.jar.
+- Java Installer: https://github.com/xihtyM/python-cmd-features/raw/master/installer.exe.
 
 **EARLY DEVELOPMENT:**
-> C Installer (Windows only as of now): https://github.com/xihtyM/python-cmd-features/raw/master/installer.exe.
+> C Installer (Windows only as of now): https://github.com/xihtyM/python-cmd-features/raw/master/C%20Installer/installer.exe.
 
 **Old**
 > Python Installer: https://raw.githubusercontent.com/xihtyM/python-cmd-features/master/cmd%20installer.py - Copy this into a .py file.
