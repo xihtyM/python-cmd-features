@@ -1,31 +1,34 @@
-# cmd v1.0.4 pre-release-2
+# cmd v1.0.4 pre-release-3
 
 ## Patch Notes ##
-1. ADDED EXECUTABLE INSTALLER
+1. Windows installer (Fixed)
+2. Added shortcuts with c installer.
 
 ## Next Release (v.1.0.4) ##
 1. Control volume of playsound and add something that can pause/stop music from playing.
-2. Add shortcuts to installer (Most likely v1.0.5).
 
 ## Future Notes ##
 1. Adding support for linux and mac on c installer.
+
+## Installers
+
+**Windows installer**
+- Windows installer: https://github.com/xihtyM/python-cmd-features/raw/master/Windows%20Installer/installer.exe.
+
+**Java installer (Supports Windows, Unix and MacOS)**
+> Java Installer: https://github.com/xihtyM/python-cmd-features/raw/master/Java%20Installer/installer.jar.
+
+**Old (Currently unavailable)**
+> Python Installer: https://raw.githubusercontent.com/xihtyM/python-cmd-features/master/cmd%20installer.py - Copy this into a .py file.
 
 ## Download ##
 
 __With installer__
 
-1. Install the installer by going to this link:
-- Java Installer: https://github.com/xihtyM/python-cmd-features/raw/master/installer.jar.
-
-**EARLY DEVELOPMENT:**
-> C Installer (Windows only as of now): https://github.com/xihtyM/python-cmd-features/raw/master/installer.exe.
-
-**Old**
-> Python Installer: https://raw.githubusercontent.com/xihtyM/python-cmd-features/master/cmd%20installer.py - Copy this into a .py file.
+1. Install the installer by going to the above links:
 2. Install fixer and run it at (If you use the java installer): https://github.com/xihtyM/python-cmd-features/raw/master/fixer.exe.
 3. Run the installer.
 4. Input your chosen directory.
-3. **Optional**: Create a shortcut to main.py.
 
 __With zipped file__
 
