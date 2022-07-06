@@ -14,14 +14,13 @@
 void isValid() {
     if(system(NULL) == false) {
         printf("Error: System is not supported.");
-        system("pause");
         exit(0);
     }
 }
 
 #if __WIN__f == false
     printf("Error: Please use the correct installer for your OS.");
-    exit(1);
+    exit(0);
 #endif
 
 /* Update Python Libraries for cmd to run */
@@ -47,7 +46,7 @@ int length(char * x) {
 
 char * replace(char * string, char chr1, char chr2) {
     int i;
-    char * endStr = malloc(sizeof(string)+1);
+    char * endStr = malloc(length(string)+1);
 
     for(i=0; string[i]; i++) {
         if(string[i] == chr1) {
@@ -100,13 +99,11 @@ int isDirectory(char *dir) {
 
 	/* If it is a folder */
 
-	if (stat(folder, &sb) == false && S_ISDIR(sb.st_mode))
-	{
+	if (stat(folder, &sb) == false && S_ISDIR(sb.st_mode)) {
 		return true;
 	}
 	/* If it is not a folder */
-	else
-	{
+	else {
 		return false;
 	}
 }
@@ -150,7 +147,7 @@ void install(char *dir) {
 	strcpy(tempDest, __dir);
 	strcat(tempDest, "\\cmd.zip");
 	const char *dest = tempDest;
-
+	
 	/* Print location of zip file */
 
 	printf("\nInstalling zip at: %s", dest);
@@ -226,8 +223,14 @@ void addShrt(const char *p) {
 }
 
 int main() {
+
     isValid();
+
     UpdatePyPackages();
+
+	/* Clear */
+
+	system("cls");
 
     /* Create pycmd shell command in windows */
 
@@ -236,6 +239,11 @@ int main() {
     /* While path is not a directory */
 
     while(isDirectory(path) == false) {
+		
+		/* Red color */
+
+		system("color 4");
+
         printf("Installation directory: ");
 
         /* User input */
@@ -250,8 +258,6 @@ int main() {
 
         path[length(path)-1] = '\0';
     }
-
-    printf("\nInstalling at: %s",path);
 
     install(path);
     addShrt(path);
