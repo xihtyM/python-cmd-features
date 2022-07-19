@@ -1,21 +1,28 @@
-# cmd v1.0.4 pre-release-3
+# cmd v1.0.4
 
 ## Patch Notes ##
-1. Windows installer (Fixed)
-2. Added shortcuts with c installer.
+1. Windows installer (Fixed).
+2. Added shortcuts with installer.
+3. Improved code (For developers).
+4. Fixed memory leaks in windows installer at lines: 107, 112, 130, 135, and 182.
+5. Fixed rmdir bug where you could remove the current directory you were in.
+6. Added ability to remove not empty directory.
+7. Added ignoring inaccessable files/directories with the dir command.
+8. Allowed for adding to whitelisted letters for txt command with `add -tx letter/letters`
+9. Refactored most outdated/slower code.
 
 ## Next Release (v.1.0.4) ##
 1. Control volume of playsound and add something that can pause/stop music from playing.
 
 ## Future Notes ##
-1. Adding support for linux and mac on c installer.
+1. Adding support for Unix/Linux based OS's.
 
 ## Installers
 
 **Windows installer**
 - Windows installer: https://github.com/xihtyM/python-cmd-features/raw/master/Windows%20Installer/installer.exe.
 
-**Java installer (Supports Windows, Unix and MacOS)**
+**Java installer (Supports Windows, Unix/Linux)**
 > Java Installer: https://github.com/xihtyM/python-cmd-features/raw/master/Java%20Installer/installer.jar.
 
 **Old (Currently unavailable)**
@@ -28,7 +35,7 @@ __With installer__
 1. Install the installer by going to the above links:
 2. Install fixer and run it at (If you use the java installer): https://github.com/xihtyM/python-cmd-features/raw/master/fixer.exe.
 3. Run the installer.
-4. Input your chosen directory.
+4. Input your chosen directory (Directories that do not work are: Drive:/Program Files, Drive:/Program Files (x86), ).
 
 __With zipped file__
 
@@ -39,6 +46,10 @@ __With zipped file__
 __Installing old versions__
 
 - Just go to https://github.com/xihtyM/python-cmd-features/tree/master/Zipped%20files/ and unzip the version you want.
+
+## Supported Operating Systems ##
+
+**As of right now, Windows is the only supported OS.**
 
 ## Fixer ##
 
