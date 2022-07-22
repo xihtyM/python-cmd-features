@@ -1,0 +1,4 @@
+echo Updating...
+@startfile "{cwd}/pcmd/update.exe"
+
+clear && reload

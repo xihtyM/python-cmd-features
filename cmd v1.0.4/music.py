@@ -9,6 +9,6 @@ except ImportError as err:
 class play():
 	def __init__(self, file: str):
 		if(os.path.exists(file) and os.path.isfile(file)):
-			subprocess.call(f"py \"{os.getcwd()}\\__playsound__.py\" \"{file}\"");
+			subprocess.call(f"py \"{getcwd()}\\__playsound__.py\" \"{file}\"");
 			return;
 		console.error("Error: Path does not exist or path is not file.");

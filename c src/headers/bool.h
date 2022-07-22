@@ -1,4 +1,4 @@
-/* C/C++ Bool Library (Bools) */
+/* C Bool Library */
 
 /* True/False/Bool */
 

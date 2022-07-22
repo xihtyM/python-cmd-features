@@ -4,15 +4,26 @@
 1. Windows installer (Fixed).
 2. Added shortcuts with installer.
 3. Improved code (For developers).
-4. Fixed memory leaks in windows installer at lines: 107, 112, 130, 135, and 182.
+4. Fixed 7 memory leaks in windows installer.
 5. Fixed rmdir bug where you could remove the current directory you were in.
 6. Added ability to remove not empty directory.
 7. Added ignoring inaccessable files/directories with the dir command.
 8. Allowed for adding to whitelisted letters for txt command with `add -tx letter/letters`
 9. Refactored most outdated/slower code.
+10. Added ability to change colors of pycmd with `color` command and help with `-colors` command.
+11. Added commands with .pcmd files.
+12. Added updater.
+13. Updated headers for C.
+14. Added echo command.
+15. Added if_command() function to main.py.
 
-## Next Release (v.1.0.4) ##
-1. Control volume of playsound and add something that can pause/stop music from playing.
+
+## Next Release (v.1.0.5) ##
+1. Control volume of playsound and add something that can pause/stop music from playing (I have an idea in mind).
+2. More commands.
+3. Improving on .pcmd files.
+4. Adding better file manipulation.
+5. Adding ability to print value of a function from echo command.
 
 ## Future Notes ##
 1. Adding support for Unix/Linux based OS's.
@@ -35,7 +46,7 @@ __With installer__
 1. Install the installer by going to the above links:
 2. Install fixer and run it at (If you use the java installer): https://github.com/xihtyM/python-cmd-features/raw/master/fixer.exe.
 3. Run the installer.
-4. Input your chosen directory (Directories that do not work are: Drive:/Program Files, Drive:/Program Files (x86), ).
+4. Input your chosen directory (Directories that do not work are: Drive:/Program Files, Drive:/Program Files (x86)).
 
 __With zipped file__
 
@@ -57,7 +68,7 @@ __Precautions__
 
 **If you don't trust it:**
 
-- Source code is available at https://github.com/xihtyM/python-cmd-features/blob/master/fixer.c.
+- Source code is available at https://github.com/xihtyM/python-cmd-features/blob/master/c%20src/fixer.c.
 
 **If you still don't trust it:**
 
