@@ -1,4 +1,5 @@
 def compile(code: str) -> None:
+    """Compiler for python+ (Not done - seperate project, I will come back to this later.)"""
     tokens = {};
     noWhitespaceCode: str;
     for i, v in enumerate(code):

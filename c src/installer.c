@@ -7,12 +7,11 @@
 
 /* Bool, os, all defines */
 
-#include "headers/str.h"
 #include "headers/os.h"
 
 /* Check if system is valid */
 
-void isValid() {
+void isValid(void) {
     if(system(NULL) == false) {
         printf("Error: System is not supported.");
         exit(0);
@@ -26,7 +25,7 @@ void isValid() {
 
 /* Update Python Libraries for cmd to run */
 
-void UpdatePyPackages() {
+void UpdatePyPackages(void) {
         
     /* Install */
         
@@ -40,7 +39,6 @@ void UpdatePyPackages() {
 #include <urlmon.h>
 
 /* Install */
-
 void install(char * dir) {
 
 	/* URL of zipped file */
@@ -53,9 +51,7 @@ void install(char * dir) {
 
 	/* Directory to zip file */
 
-	char dest[MAX_PATH];
-	strcpy(dest, __dir);
-	strcat(dest, "\\cmd.zip");
+	char * dest = concat(__dir, "\\cmd.zip");
 	
 	/* Print location of zip file */
 
@@ -70,21 +66,19 @@ void install(char * dir) {
 		return;
 	}
 
-	char * cmd_1 = "powershell -Command Expand-Archive -Path \"";
-	char * cmd_2 = "\" -DestinationPath \"";
-
-	char cmd[MAX_PATH];
-	strcpy(cmd, cmd_1);
-	strcat(cmd, dest);
-	strcat(cmd, cmd_2);
-	strcat(cmd, __dir);
-	strcat(cmd, "\"");
+	char * cmd = concat(
+		concat("powershell -Command \"Microsoft.PowerShell.Archive\\Expand-Archive -Path \'", dest),
+		concat("\' -DestinationPath \'", concat(__dir, "\'\""))
+	);
 
 	system(cmd);
 
 	free(__dir);
+	free(cmd);
 
 	remove(dest);
+
+	free(dest);
 
 	printf("\nSucessfully installed!\n");
 }
@@ -95,7 +89,7 @@ void addShrt(char * _p) {
 
 	/* USERPROFILE environment variable */
 
-	const char * USERPROFILE = getenv("USERPROFILE");
+	char * USERPROFILE = getenv("USERPROFILE");
 	
 	/* Replace p / to \\ */
 
@@ -103,29 +97,24 @@ void addShrt(char * _p) {
 
 	/* Desktop path */
 
-	char DESKTOP[MAX_PATH];
-
-	strcpy(DESKTOP, USERPROFILE);
-	strcat(DESKTOP, "\\Desktop");
+	char * DESKTOP = concat(USERPROFILE, "\\Desktop");
 
 	/* Shortcut link */
 
-	char SHORT_LNK[MAX_PATH];
-
-	strcpy(SHORT_LNK, DESKTOP);
-	strcat(SHORT_LNK, "\\pycmd");
+	char * SHORT_LNK = concat(DESKTOP, "\\pycmd");
 
 	/* System command */
 
-	char command[1024] = "mklink \"";
-
-	strcat(command, SHORT_LNK);
-	strcat(command, "\" \"");
-	strcat(command, p);
-	strcat(command, "\\cmd\\main.py");
-	strcat(command, "\"");
+	char * command = concat(
+		concat("mklink \"", SHORT_LNK),
+		concat("\" \"", concat(p, "\\cmd\\main.py\""))
+	);
 
 	system(command);
+	free(DESKTOP);
+	free(SHORT_LNK);
+	free(command);
+	free(p);
 }
 
 int main(void) {
@@ -144,7 +133,7 @@ int main(void) {
 
     /* While path is not a directory */
 
-    while(isdir(path) == false) {
+    while(os_isdir(path) == false) {
 		
 		/* Red color */
 
@@ -162,7 +151,7 @@ int main(void) {
         
         /* Remove last character of string (it's a newline as I used fgets) */
 
-        path[length(path)-1] = '\0';
+        path[length(path) - 1] = '\0';
     }
 
     install(path);
