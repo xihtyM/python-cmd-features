@@ -83,7 +83,7 @@ int main(void) {
 
 	printf("Updating...");
 
-	char * new_dir_cmd = concat(new_dir, "\\cmd v1.0.4");
+	char * new_dir_cmd = concat(new_dir, "\\cmd");
 
 	int index = 1;
 	char * files = os_listdir(new_dir_cmd, index);
