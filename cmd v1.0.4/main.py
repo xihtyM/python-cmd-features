@@ -39,7 +39,7 @@ class def_colors:
 # IMPORT ALL MODULES/LIBS
 
 try:
-    import os, texteditor, dec, find, runpy, pyplus, math, subprocess, music;
+    import os, texteditor, dec, find, runpy, pyplus, math, subprocess, music, time;
     from gcwd_ import getcwd;
     from py_console import console;
     from shutil import rmtree;
@@ -50,6 +50,10 @@ except ImportError as err:
     os.system("");
 
     print(clrs.rgbcolor(200,0,0,"",""),end='');
+    try:
+        import time; # For wait command
+    except ImportError as e:
+        print(IMPORT_ERROR_MSG,e);
     try:
         from py_console import console; # For console.error and console.success
     except ImportError as e:
@@ -377,6 +381,12 @@ def cmd(command: str):
         else:
             console.error("Error: Not a valid file.", path);
             return 1;
+        return 0;
+    
+    # Wait command (seconds)
+
+    if(if_command(ARGS, "wait")):
+        time.sleep(int(ARGS[1]));
         return 0;
 
     # Run pycmd files
