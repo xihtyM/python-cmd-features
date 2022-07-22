@@ -99,7 +99,9 @@ int main(void) {
 		files = os_listdir(new_dir_cmd, index);
 	}
 	
+	_rmdir(new_dir_cmd);
 	_rmdir(new_dir);
+	
 	/* Free memory */
 	free(cmd_path);
 	free(new_dir_cmd);
