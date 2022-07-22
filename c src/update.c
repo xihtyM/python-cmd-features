@@ -92,7 +92,6 @@ int main(void) {
 		char * path = concat(new_dir_cmd, concat("\\", files));
 		char * c_path = concat(cmd_path, concat("\\", files));
 		if (os_isfile(path)) {
-			printf("Test: %s : %s", path, c_path);
 			file_write(c_path, file_read(path));
 		}
 		free(c_path);
@@ -106,8 +105,6 @@ int main(void) {
 	free(new_dir_cmd);
 	free(new_dir);
 	free(temp_dir);
-
-	system("pause");
 
 	return 0;
 }
